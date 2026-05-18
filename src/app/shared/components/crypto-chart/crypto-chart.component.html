@@ -1,0 +1,17 @@
+<div class="chart-container" (click)="onChartClick()">
+  @if (chartOptions(); as options) {
+    @if (options.series) {
+      <apx-chart
+        [series]="options.series"
+        [chart]="options.chart!"
+        [xaxis]="options.xaxis!"
+        [stroke]="options.stroke!"
+        [dataLabels]="options.dataLabels!"
+        [theme]="options.theme!"
+        [tooltip]="options.tooltip!">
+      </apx-chart>
+    }
+  } @else {
+    <div class="placeholder">Подготовка графика...</div>
+  }
+</div>

@@ -1,0 +1,84 @@
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  background: #1e293b;
+}
+
+.markets-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #334155;
+  }
+
+  th {
+    color: #94a3b8;
+    font-weight: 600;
+    background: #0f172a;
+  }
+
+  .col-num {
+    text-align: right;
+  }
+
+  .col-fav {
+    width: 48px;
+    text-align: center;
+  }
+
+  .row {
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #334155;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .pair {
+    font-weight: 600;
+    color: #f8fafc;
+  }
+
+  .change.positive {
+    color: #22c55e;
+  }
+
+  .change.negative {
+    color: #ef4444;
+  }
+
+  .empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px;
+  }
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #64748b;
+  line-height: 1;
+  padding: 4px;
+
+  &.active {
+    color: #fbbf24;
+  }
+
+  &:hover {
+    color: #fbbf24;
+  }
+}

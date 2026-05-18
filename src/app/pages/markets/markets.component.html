@@ -1,0 +1,23 @@
+<div class="markets-page">
+  <header>
+    <h1>Markets</h1>
+    <p class="subtitle">USDT pairs from Binance Testnet (REST)</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loader">
+      <div class="spinner"></div>
+      Loading market data...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error">{{ errorMessage() }}</div>
+    <button type="button" class="retry-btn" (click)="loadMarkets()">Retry</button>
+  } @else {
+    <app-markets-table
+      [rows]="rows()"
+      [favoriteSymbols]="favoriteSymbols()"
+      (pairSelected)="onPairSelected($event)"
+      (favoriteToggled)="onFavoriteToggled($event)"
+    />
+  }
+</div>

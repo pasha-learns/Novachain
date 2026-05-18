@@ -1,0 +1,29 @@
+<div class="dashboard">
+  <header>
+    <h1>Ethereum (ETH) Analytics</h1>
+    <div class="filters">
+      <button [class.active]="selectedDays() === 1" (click)="loadData(1)">24 Часа</button>
+      <button [class.active]="selectedDays() === 7" (click)="loadData(7)">7 Дней</button>
+      <button [class.active]="selectedDays() === 30" (click)="loadData(30)">1 Месяц</button>
+    </div>
+  </header>
+
+  <main>
+    @if (isLoading()) {
+      <div class="loader">
+        <div class="spinner"></div>
+        Загрузка данных с рынка...
+      </div>
+    } @else {
+      <app-crypto-chart
+        [data]="chartData()"
+        title="Ethereum"
+        (chartClicked)="handleUserInteraction($event)">
+      </app-crypto-chart>
+    }
+
+    @if (interactionMessage(); as msg) {
+      <div class="alert">{{ msg }}</div>
+    }
+  </main>
+</div>
