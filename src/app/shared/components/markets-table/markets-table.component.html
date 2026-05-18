@@ -1,0 +1,44 @@
+<div class="table-wrap">
+  <table class="markets-table">
+    <thead>
+      <tr>
+        <th class="col-fav"></th>
+        <th>Pair</th>
+        <th class="col-num">Price</th>
+        <th class="col-num">24h Change (%)</th>
+        <th class="col-num">24h Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track row.symbol) {
+        <tr class="row" (click)="onRowClick(row.symbol, $event)">
+          <td class="col-fav">
+            <button
+              type="button"
+              class="favorite-btn"
+              [class.active]="isFavorite(row.symbol)"
+              [attr.aria-label]="isFavorite(row.symbol) ? 'Remove from favorites' : 'Add to favorites'"
+              (click)="onFavoriteClick(row.symbol, $event)"
+            >
+              {{ isFavorite(row.symbol) ? '★' : '☆' }}
+            </button>
+          </td>
+          <td class="pair">{{ row.symbol }}</td>
+          <td class="col-num">{{ row.price | number: '1.2-8' }}</td>
+          <td
+            class="col-num change"
+            [class.positive]="row.changePercent24h >= 0"
+            [class.negative]="row.changePercent24h < 0"
+          >
+            {{ row.changePercent24h | number: '1.2-2' }}%
+          </td>
+          <td class="col-num">{{ row.volume24h | number: '1.0-0' }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="empty">No pairs to display</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
