@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { MarketRow } from '../../core/models/market.model';
+import { Router } from '@angular/router';
 import { MarketsService } from '../../core/services/markets.service';
+import { DataService } from '../../core/services/data.service';
 import { MarketsTableComponent } from '../../shared/components/markets-table/markets-table.component';
 
 @Component({
@@ -12,13 +13,17 @@ import { MarketsTableComponent } from '../../shared/components/markets-table/mar
 })
 export class MarketsComponent implements OnInit {
   private readonly marketsService = inject(MarketsService);
+  public readonly dataService = inject(DataService);
+  private readonly router = inject(Router);
 
-  readonly rows = signal<MarketRow[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
-  readonly favoriteSymbols = signal<Set<string>>(new Set());
 
   ngOnInit(): void {
+    if (this.dataService.marketRows().length > 0) {
+      this.isLoading.set(false);
+      return;
+    }
     this.loadMarkets();
   }
 
@@ -28,29 +33,22 @@ export class MarketsComponent implements OnInit {
 
     this.marketsService.getUsdtPairs().subscribe({
       next: (data) => {
-        this.rows.set(data);
+        this.dataService.setMarkets(data);
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Failed to load market data. Please try again later.');
+        this.errorMessage.set('Failed to load market data.');
         this.isLoading.set(false);
       },
     });
   }
 
   onPairSelected(symbol: string): void {
-    console.log('Sprint 2: navigate to trade for', symbol);
+    this.dataService.setSymbol(symbol);
+    this.router.navigate(['/dashboard']);
   }
 
   onFavoriteToggled(symbol: string): void {
-    this.favoriteSymbols.update((current) => {
-      const next = new Set(current);
-      if (next.has(symbol)) {
-        next.delete(symbol);
-      } else {
-        next.add(symbol);
-      }
-      return next;
-    });
+    this.dataService.toggleFavorite(symbol);
   }
 }

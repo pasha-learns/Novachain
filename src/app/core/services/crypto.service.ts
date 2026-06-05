@@ -3,17 +3,26 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environment/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CryptoService {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-  getEthPriceHistory(days: number = 7): Observable<[number, number][]> {
-    return this.http.get<any>(`${environment.apiUrl}/coins/ethereum/market_chart`, {
-      params: { vs_currency: 'usd', days: days.toString() }
+  getChartData(symbol: string, days: number): Observable<[number, number][]> {
+    let interval = '1h';
+    let limit = 720;
+
+    if (days === 1) {
+      interval = '5m';
+      limit = 288;
+    } else if (days === 7) {
+      interval = '15m';
+      limit = 672;
+    }
+
+    return this.http.get<any[][]>(`${environment.binanceApiUrl}/klines`, {
+      params: { symbol, interval, limit: limit.toString() }
     }).pipe(
-      map(response => response.prices)
+      map(klines => klines.map(k => [k[0], Number(k[4])]))
     );
   }
 }
