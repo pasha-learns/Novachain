@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { MarketRow } from '../../core/models/market.model';
 import { MarketsService } from '../../core/services/markets.service';
 import { MarketsTableComponent } from '../../shared/components/markets-table/markets-table.component';
@@ -12,11 +13,13 @@ import { MarketsTableComponent } from '../../shared/components/markets-table/mar
 })
 export class MarketsComponent implements OnInit {
   private readonly marketsService = inject(MarketsService);
+  private readonly router = inject(Router);
 
   readonly rows = signal<MarketRow[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
   readonly favoriteSymbols = signal<Set<string>>(new Set());
+  readonly favoriteCount = computed(() => this.favoriteSymbols().size);
 
   ngOnInit(): void {
     this.loadMarkets();
@@ -39,7 +42,7 @@ export class MarketsComponent implements OnInit {
   }
 
   onPairSelected(symbol: string): void {
-    console.log('Sprint 2: navigate to trade for', symbol);
+    this.router.navigate(['/trade', symbol]);
   }
 
   onFavoriteToggled(symbol: string): void {

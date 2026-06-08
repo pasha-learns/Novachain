@@ -22,12 +22,17 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
   },
   {
     path: 'markets',
     loadComponent: () =>
       import('./pages/markets/markets.component').then((m) => m.MarketsComponent),
+  },
+  {
+    path: 'trade/:symbol',
+    loadComponent: () =>
+      import('./pages/trade/trade.component').then((m) => m.TradeComponent),
   },
   {
     path: '**',

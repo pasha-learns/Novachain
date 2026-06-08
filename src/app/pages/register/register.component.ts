@@ -61,7 +61,7 @@ export class RegisterComponent {
     this.serverError.set('');
 
     this.authService.register(this.email.value!, this.password.value!).subscribe({
-      next: () => this.router.navigate(['/settings']),
+      next: () => this.router.navigate(['/dashboard']),
       error: (err) => {
         this.isLoading.set(false);
         this.serverError.set(err.error?.message ?? 'An error occurred during registration');

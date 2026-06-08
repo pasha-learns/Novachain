@@ -1,4 +1,11 @@
-<div class="chart-container" (click)="onChartClick()">
+<div
+  class="chart-container"
+  role="button"
+  tabindex="0"
+  (click)="onChartClick()"
+  (keyup.enter)="onChartClick()"
+  (keyup.space)="onChartClick()"
+>
   @if (chartOptions(); as options) {
     @if (options.series) {
       <apx-chart

@@ -2,6 +2,10 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
 
+## Live demo
+
+https://pasha-learns.github.io/Novachain/
+
 ## Development server
 
 To start a local development server, run:
