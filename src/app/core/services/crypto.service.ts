@@ -9,11 +9,11 @@ import { environment } from '../../../environment/environment';
 export class CryptoService {
   private http = inject(HttpClient);
 
-  getEthPriceHistory(days: number = 7): Observable<[number, number][]> {
-    return this.http.get<any>(`${environment.apiUrl}/coins/ethereum/market_chart`, {
-      params: { vs_currency: 'usd', days: days.toString() }
-    }).pipe(
-      map(response => response.prices)
-    );
+  getEthPriceHistory(days = 7): Observable<[number, number][]> {
+    return this.http
+      .get<{ prices: [number, number][] }>(`${environment.apiUrl}/coins/ethereum/market_chart`, {
+        params: { vs_currency: 'usd', days: days.toString() },
+      })
+      .pipe(map((response) => response.prices));
   }
 }
