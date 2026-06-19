@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -19,7 +20,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, FormFieldComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -39,16 +40,12 @@ export class RegisterComponent {
     { validators: passwordMatchValidator }
   );
 
-  get email() {
+  private get email() {
     return this.form.get('email')!;
   }
 
-  get password() {
+  private get password() {
     return this.form.get('password')!;
-  }
-
-  get confirmPassword() {
-    return this.form.get('confirmPassword')!;
   }
 
   onSubmit(): void {

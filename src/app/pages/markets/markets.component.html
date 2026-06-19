@@ -14,7 +14,7 @@
     <button type="button" class="retry-btn" (click)="loadMarkets()">Retry</button>
   } @else {
     <app-markets-table
-      [rows]="rows()"
+      [rows]="filteredRows()"
       [favoriteSymbols]="favoriteSymbols()"
       (pairSelected)="onPairSelected($event)"
       (favoriteToggled)="onFavoriteToggled($event)"

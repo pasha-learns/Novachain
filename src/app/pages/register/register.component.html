@@ -6,59 +6,33 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-      <div class="field">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="you@example.com"
-          [class.invalid]="email.invalid && email.touched"
-          autocomplete="email"
-        />
-        @if (email.touched && email.errors?.['required']) {
-          <span class="error">Email is required</span>
-        } @else if (email.touched && email.errors?.['email']) {
-          <span class="error">>Enter correct email</span>
-        }
-      </div>
+      <app-form-field
+        formControlName="email"
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        [errors]="{ required: 'Email is required', email: 'Enter correct email' }"
+      />
 
-      <div class="field">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Minimum 8 characters"
-          [class.invalid]="password.invalid && password.touched"
-          autocomplete="new-password"
-        />
-        @if (password.touched && password.errors?.['required']) {
-          <span class="error">Password is required</span>
-        } @else if (password.touched && password.errors?.['minlength']) {
-          <span class="error">Password must contain at least 8 characters</span>
-        }
-      </div>
+      <app-form-field
+        formControlName="password"
+        label="Password"
+        type="password"
+        placeholder="Minimum 8 characters"
+        autocomplete="new-password"
+        [errors]="{ required: 'Password is required', minlength: 'Password must contain at least 8 characters' }"
+      />
 
-      <div class="field">
-        <label for="confirmPassword">Password confirmation</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          formControlName="confirmPassword"
-          placeholder="Repeat the password"
-          [class.invalid]="
-            (confirmPassword.invalid && confirmPassword.touched) ||
-            (form.errors?.['passwordMismatch'] && confirmPassword.touched)
-          "
-          autocomplete="new-password"
-        />
-        @if (confirmPassword.touched && confirmPassword.errors?.['required']) {
-          <span class="error">Password confirmation is required</span>
-        } @else if (confirmPassword.touched && form.errors?.['passwordMismatch']) {
-          <span class="error">Passwords do not match</span>
-        }
-      </div>
+      <app-form-field
+        formControlName="confirmPassword"
+        label="Password confirmation"
+        type="password"
+        placeholder="Repeat the password"
+        autocomplete="new-password"
+        [errors]="{ required: 'Password confirmation is required', passwordMismatch: 'Passwords do not match' }"
+        [groupErrors]="form.errors"
+      />
 
       @if (serverError()) {
         <div class="server-error">{{ serverError() }}</div>

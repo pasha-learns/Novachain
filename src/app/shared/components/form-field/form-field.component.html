@@ -1,0 +1,20 @@
+<div class="field">
+  @if (label()) {
+    <label [for]="inputId">{{ label() }}</label>
+  }
+  <input
+    #fieldInput
+    [id]="inputId"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [autocomplete]="autocomplete()"
+    [value]="innerValue"
+    [class.invalid]="isInvalid"
+    [disabled]="isDisabled"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+  @if (activeError) {
+    <span class="error">{{ activeError }}</span>
+  }
+</div>
