@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
 
@@ -23,14 +24,6 @@ export class LoginComponent {
     password: new FormControl('', [Validators.required]),
   });
 
-  private get email() {
-    return this.form.get('email')!;
-  }
-
-  private get password() {
-    return this.form.get('password')!;
-  }
-
   private parseError(err: { status: number; error?: { code?: string; message?: string } }): string {
     const code = err.error?.code;
     if (code === 'USER_NOT_FOUND' || err.status === 404) return 'No account found with this email';
@@ -47,12 +40,13 @@ export class LoginComponent {
     this.isLoading.set(true);
     this.serverError.set('');
 
-    this.authService.login(this.email.value!, this.password.value!).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
-      error: (err) => {
-        this.isLoading.set(false);
-        this.serverError.set(this.parseError(err));
-      },
-    });
+    const { email, password } = this.form.controls;
+
+    this.authService.login(email.value!, password.value!)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => this.router.navigate(['/dashboard']),
+        error: (err) => this.serverError.set(this.parseError(err)),
+      });
   }
 }

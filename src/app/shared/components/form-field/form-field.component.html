@@ -8,10 +8,8 @@
     [type]="type()"
     [placeholder]="placeholder()"
     [autocomplete]="autocomplete()"
-    [value]="innerValue"
+    [formControl]="innerControl"
     [class.invalid]="isInvalid"
-    [disabled]="isDisabled"
-    (input)="onInput($event)"
     (blur)="onBlur()"
   />
   @if (activeError) {

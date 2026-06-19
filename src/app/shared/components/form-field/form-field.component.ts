@@ -1,9 +1,17 @@
 import { Component, ElementRef, inject, input, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl, ValidationErrors } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NgControl,
+  ReactiveFormsModule,
+  ValidationErrors,
+} from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-form-field',
   standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './form-field.component.html',
   styleUrl: './form-field.component.scss',
 })
@@ -21,8 +29,9 @@ export class FormFieldComponent implements ControlValueAccessor {
   readonly groupErrors = input<ValidationErrors | null>(null);
 
   protected readonly inputId = `field-${++FormFieldComponent.nextId}`;
-  protected innerValue = '';
-  protected isDisabled = false;
+  // Internal FormControl owns the input's value and disabled state.
+  // Its valueChanges stream propagates updates to the parent form.
+  protected readonly innerControl = new FormControl('');
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
@@ -31,6 +40,10 @@ export class FormFieldComponent implements ControlValueAccessor {
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
+
+    this.innerControl.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(value => this.onChange(value ?? ''));
   }
 
   focus(): void {
@@ -62,18 +75,12 @@ export class FormFieldComponent implements ControlValueAccessor {
     return null;
   }
 
-  protected onInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.innerValue = value;
-    this.onChange(value);
-  }
-
   protected onBlur(): void {
     this.onTouched();
   }
 
   writeValue(value: string): void {
-    this.innerValue = value ?? '';
+    this.innerControl.setValue(value ?? '', { emitEvent: false });
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -85,6 +92,6 @@ export class FormFieldComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
+    isDisabled ? this.innerControl.disable() : this.innerControl.enable();
   }
 }

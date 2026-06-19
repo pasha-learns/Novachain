@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
 
@@ -40,14 +41,6 @@ export class RegisterComponent {
     { validators: passwordMatchValidator }
   );
 
-  private get email() {
-    return this.form.get('email')!;
-  }
-
-  private get password() {
-    return this.form.get('password')!;
-  }
-
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -57,12 +50,13 @@ export class RegisterComponent {
     this.isLoading.set(true);
     this.serverError.set('');
 
-    this.authService.register(this.email.value!, this.password.value!).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
-      error: (err) => {
-        this.isLoading.set(false);
-        this.serverError.set(err.error?.message ?? 'An error occurred during registration');
-      },
-    });
+    const { email, password } = this.form.controls;
+
+    this.authService.register(email.value!, password.value!)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => this.router.navigate(['/dashboard']),
+        error: (err) => this.serverError.set(err.error?.message ?? 'An error occurred during registration'),
+      });
   }
 }
