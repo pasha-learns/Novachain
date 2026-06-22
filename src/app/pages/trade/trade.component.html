@@ -2,7 +2,7 @@
   <header>
     <a routerLink="/markets" class="back-link">← Back to Markets</a>
     <h1>Trade</h1>
-    <p class="symbol">{{ displaySymbol() }}</p>
+    <p class="symbol">{{ symbol() | pairSymbol }}</p>
     <p class="subtitle">Trading view for {{ symbol() }} — Sprint 2 placeholder</p>
   </header>
 </div>

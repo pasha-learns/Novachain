@@ -23,13 +23,9 @@
               {{ isFavorite(row.symbol) ? '★' : '☆' }}
             </button>
           </td>
-          <td class="pair">{{ row.symbol }}</td>
+          <td class="pair">{{ row.symbol | pairSymbol }}</td>
           <td class="col-num">{{ row.price | number: '1.2-8' }}</td>
-          <td
-            class="col-num change"
-            [class.positive]="row.changePercent24h >= 0"
-            [class.negative]="row.changePercent24h < 0"
-          >
+          <td class="col-num change" [appChangeColor]="row.changePercent24h">
             {{ row.changePercent24h | number: '1.2-2' }}%
           </td>
           <td class="col-num">{{ row.volume24h | number: '1.0-0' }}</td>

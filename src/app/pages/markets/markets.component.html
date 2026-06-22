@@ -1,7 +1,7 @@
 <div class="markets-page">
   <header>
     <h1>Markets</h1>
-    <p class="subtitle">USDT pairs from Binance Testnet (REST)</p>
+    <p class="subtitle">{{ quoteCurrency }} pairs from Binance Testnet (REST)</p>
   </header>
 
   @if (isLoading()) {
@@ -14,7 +14,7 @@
     <button type="button" class="retry-btn" (click)="loadMarkets()">Retry</button>
   } @else {
     <app-markets-table
-      [rows]="rows()"
+      [rows]="filteredRows()"
       [favoriteSymbols]="favoriteSymbols()"
       (pairSelected)="onPairSelected($event)"
       (favoriteToggled)="onFavoriteToggled($event)"

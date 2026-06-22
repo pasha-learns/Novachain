@@ -3,12 +3,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 const AUTH_ROUTES = ['/login', '/register'];
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [RouterOutlet, HeaderComponent, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

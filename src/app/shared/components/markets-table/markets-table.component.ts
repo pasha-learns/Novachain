@@ -1,11 +1,13 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MarketRow } from '../../../core/models/market.model';
+import { ChangeColorDirective } from '../../directives/change-color.directive';
+import { PairSymbolPipe } from '../../pipes/pair-symbol.pipe';
 
 @Component({
   selector: 'app-markets-table',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, PairSymbolPipe, ChangeColorDirective],
   templateUrl: './markets-table.component.html',
   styleUrl: './markets-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

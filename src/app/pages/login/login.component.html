@@ -6,37 +6,23 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-      <div class="field">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="you@example.com"
-          [class.invalid]="email.invalid && email.touched"
-          autocomplete="email"
-        />
-        @if (email.touched && email.errors?.['required']) {
-          <span class="error">Email is required</span>
-        } @else if (email.touched && email.errors?.['email']) {
-          <span class="error">Enter correct email</span>
-        }
-      </div>
+      <app-form-field
+        [formControl]="form.controls.email"
+        label="Email"
+        type="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        [errors]="{ required: 'Email is required', email: 'Enter correct email' }"
+      />
 
-      <div class="field">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="••••••••"
-          [class.invalid]="password.invalid && password.touched"
-          autocomplete="current-password"
-        />
-        @if (password.touched && password.errors?.['required']) {
-          <span class="error">Password is required</span>
-        }
-      </div>
+      <app-form-field
+        [formControl]="form.controls.password"
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        [errors]="{ required: 'Password is required' }"
+      />
 
       @if (serverError()) {
         <div class="server-error">{{ serverError() }}</div>
