@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth.service';
 import { SearchService } from '../../../core/services/search.service';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { FormFieldComponent } from '../form-field/form-field.component';
 import { IconComponent } from '../icon/icon.component';
 
@@ -18,7 +19,7 @@ interface NavItem {
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, IconComponent, FormFieldComponent, ReactiveFormsModule],
+  imports: [RouterLink, RouterLinkActive, IconComponent, FormFieldComponent, ReactiveFormsModule, ClickOutsideDirective],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

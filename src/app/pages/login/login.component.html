@@ -7,7 +7,7 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
       <app-form-field
-        formControlName="email"
+        [formControl]="form.controls.email"
         label="Email"
         type="email"
         placeholder="you@example.com"
@@ -16,7 +16,7 @@
       />
 
       <app-form-field
-        formControlName="password"
+        [formControl]="form.controls.password"
         label="Password"
         type="password"
         placeholder="••••••••"

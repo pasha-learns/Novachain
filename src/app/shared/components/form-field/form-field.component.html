@@ -12,7 +12,9 @@
     [class.invalid]="isInvalid"
     (blur)="onBlur()"
   />
-  @if (activeError) {
-    <span class="error">{{ activeError }}</span>
+  @if (isTouched) {
+    @if (allErrors | errorMessage: errors(); as message) {
+      <span class="error">{{ message }}</span>
+    }
   }
 </div>

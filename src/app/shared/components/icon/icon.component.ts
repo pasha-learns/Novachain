@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -35,6 +35,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     '[style.width.px]': 'width()',
     '[style.height.px]': 'height()',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
   private readonly http = inject(HttpClient);

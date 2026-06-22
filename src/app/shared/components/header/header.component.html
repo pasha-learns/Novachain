@@ -27,7 +27,7 @@
     </nav>
 
     <div class="header-right">
-      <div class="search-bar" [class.is-open]="isSearchOpen()" (keydown.escape)="toggleSearch()">
+      <div class="search-bar" [class.is-open]="isSearchOpen()" (keydown.escape)="toggleSearch()" appClickOutside (clickOutside)="isSearchOpen() && toggleSearch()">
         <button
           class="icon-btn search-toggle"
           [attr.aria-label]="isSearchOpen() ? 'Close search' : 'Search'"

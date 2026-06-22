@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, ViewChild } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -7,13 +7,15 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ErrorMessagePipe } from '../../pipes/error-message.pipe';
 
 @Component({
   selector: 'app-form-field',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ErrorMessagePipe],
   templateUrl: './form-field.component.html',
   styleUrl: './form-field.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldComponent implements ControlValueAccessor {
   private static nextId = 0;
@@ -63,16 +65,12 @@ export class FormFieldComponent implements ControlValueAccessor {
     return hasControlErrors || hasGroupError;
   }
 
-  protected get activeError(): string | null {
-    if (!this.isTouched) return null;
-    const allErrors = {
+  protected get allErrors(): ValidationErrors | null {
+    const merged = {
       ...(this.ngControl?.control?.errors ?? {}),
       ...(this.groupErrors() ?? {}),
     };
-    for (const key of Object.keys(this.errors())) {
-      if (allErrors[key]) return this.errors()[key];
-    }
-    return null;
+    return Object.keys(merged).length ? merged : null;
   }
 
   protected onBlur(): void {
