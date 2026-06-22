@@ -35,7 +35,9 @@ export class FormFieldComponent implements ControlValueAccessor {
   // Its valueChanges stream propagates updates to the parent form.
   protected readonly innerControl = new FormControl('');
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched: () => void = () => {};
 
   constructor() {
@@ -90,6 +92,10 @@ export class FormFieldComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    isDisabled ? this.innerControl.disable() : this.innerControl.enable();
+    if (isDisabled) {
+      this.innerControl.disable();
+    } else {
+      this.innerControl.enable();
+    }
   }
 }

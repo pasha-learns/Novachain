@@ -7,7 +7,7 @@ export class ClickOutsideDirective {
   readonly clickOutside = output<void>();
 
   @HostListener('document:click', ['$event.target'])
-  onDocumentClick(target: HTMLElement): void {
+  onDocumentClick(target: EventTarget | null): void {
     if (!this.elementRef.nativeElement.contains(target)) {
       this.clickOutside.emit();
     }
