@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CryptoChartComponent } from '../../shared/components/crypto-chart/crypto-chart.component';
 import { CryptoService } from '../../core/services/crypto.service';
 
@@ -7,7 +7,8 @@ import { CryptoService } from '../../core/services/crypto.service';
   standalone: true,
   imports: [CryptoChartComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
   private readonly cryptoService = inject(CryptoService);

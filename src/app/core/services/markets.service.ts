@@ -2,19 +2,23 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { BinanceTicker24hr, MarketRow } from '../models/market.model';
-import { environment } from '../../../environment/environment';
+import { ENVIRONMENT } from '../tokens/environment.token';
+import { QUOTE_CURRENCY } from '../tokens/quote-currency.token';
 
 @Injectable({ providedIn: 'root' })
 export class MarketsService {
   private readonly http = inject(HttpClient);
+  private readonly env = inject(ENVIRONMENT);
+  private readonly quoteCurrency = inject(QUOTE_CURRENCY);
 
   getUsdtPairs(): Observable<MarketRow[]> {
+    const quote = this.quoteCurrency;
     return this.http
-      .get<BinanceTicker24hr[]>(`${environment.binanceApiUrl}/ticker/24hr`)
+      .get<BinanceTicker24hr[]>(`${this.env.binanceApiUrl}/ticker/24hr`)
       .pipe(
         map((tickers) =>
           tickers
-            .filter((t) => t.symbol.endsWith('USDT'))
+            .filter((t) => t.symbol.endsWith(quote))
             .map((t) => ({
               symbol: t.symbol,
               price: Number(t.lastPrice),
