@@ -23,4 +23,4 @@
   Angular's `@if (expr; as variable)` syntax in the new control flow captures the expression result, which allows using a pipe's return value directly as a variable in the block without an extra getter in the class.
   `ChangeDetectionStrategy.OnPush` is safe for signal-based components because Angular's signal runtime automatically schedules re-checks when a signal value changes, even under `OnPush`.
 
-- **_Time spent_**: 8 hours.
+- **_Time spent_**: 10 hours.
