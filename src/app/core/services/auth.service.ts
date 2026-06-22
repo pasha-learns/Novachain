@@ -1,21 +1,42 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import { AuthResponse, StoredUser } from '../models/auth.model';
+import { AuthResponse, StoredUser, TokenPayload } from '../models/auth.model';
 import { LocalStorageService } from './local-storage.service';
+import { NotificationService } from './notification.service';
+
+const TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly router = inject(Router);
   private readonly storage = inject(LocalStorageService);
+  private readonly notification = inject(NotificationService);
 
   private readonly _token = signal<string | null>(this.storage.get('auth_token'));
 
-  /** Readonly signal with the raw JWT. Use when you need the token value itself (e.g. HTTP interceptor). */
   readonly token = this._token.asReadonly();
 
-  /** Derived boolean — use for route guards and UI visibility checks. */
-  readonly isAuthenticated = computed(() => !!this._token());
+  readonly isAuthenticated = computed(() => {
+    const token = this._token();
+    return token !== null && this.isTokenValid(token);
+  });
+
+  constructor() {
+    // Detects an expired token on startup or whenever _token changes.
+    // untracked prevents writing _token from scheduling another run of this effect.
+    effect(() => {
+      const token = this._token();
+      if (token !== null && !this.isTokenValid(token)) {
+        untracked(() => {
+          this.storage.remove('auth_token');
+          this._token.set(null);
+          this.notification.show('Your session has expired. Please log in again.');
+          this.router.navigate(['/login']);
+        });
+      }
+    });
+  }
 
   login(email: string, password: string): Observable<AuthResponse> {
     const users = this.storage.get('registered_users') ?? [];
@@ -35,7 +56,7 @@ export class AuthService {
   register(email: string, password: string): Observable<AuthResponse> {
     const users = this.storage.get('registered_users') ?? [];
 
-    if (users.some(u => u.email === email)) {
+    if (users.some((u: StoredUser) => u.email === email)) {
       return throwError(() => ({ status: 409, error: { message: 'Email already registered' } }));
     }
 
@@ -56,8 +77,19 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  private isTokenValid(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token)) as TokenPayload;
+      return typeof payload.exp === 'number' && payload.exp > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
   private generateToken(email: string): string {
-    return btoa(JSON.stringify({ email, iat: Date.now() }));
+    const now = Date.now();
+    const payload: TokenPayload = { email, iat: now, exp: now + TOKEN_TTL_MS };
+    return btoa(JSON.stringify(payload));
   }
 
   private saveToken(token: string): AuthResponse {

@@ -17,3 +17,9 @@ export interface StoredUser {
   email: string;
   passwordHash: string;
 }
+
+export interface TokenPayload {
+  email: string;
+  iat: number;
+  exp: number;
+}
