@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketsService } from '../../core/services/markets.service';
 import { DataService } from '../../core/services/data.service';
@@ -10,6 +10,7 @@ import { MarketsTableComponent } from '../../shared/components/markets-table/mar
   imports: [MarketsTableComponent],
   templateUrl: './markets.component.html',
   styleUrl: './markets.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketsComponent implements OnInit {
   private readonly marketsService = inject(MarketsService);

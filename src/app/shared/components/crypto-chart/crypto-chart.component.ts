@@ -1,4 +1,4 @@
-import { Component, input, output, effect, signal } from '@angular/core';
+import { Component, input, output, effect, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
 
 @Component({
@@ -6,7 +6,8 @@ import { NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
   standalone: true,
   imports: [NgApexchartsModule],
   templateUrl: './crypto-chart.component.html',
-  styleUrl: './crypto-chart.component.scss'
+  styleUrl: './crypto-chart.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CryptoChartComponent {
   readonly data = input.required<[number, number][]>();

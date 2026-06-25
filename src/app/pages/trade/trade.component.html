@@ -1,0 +1,33 @@
+<div class="trade-page">
+  <h2>Создать ордер</h2>
+
+  <form [formGroup]="tradeForm" (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label>Монета</label>
+      <select formControlName="pair">
+        <option value="BTCUSDT">BTC/USDT</option>
+        <option value="ETHUSDT">ETH/USDT</option>
+        <option value="SOLUSDT">SOL/USDT</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label>Сумма</label>
+      <input type="number" formControlName="amount" step="0.01">
+
+      @if (tradeForm.get('amount')?.touched && tradeForm.get('amount')?.hasError('min')) {
+        <span class="error">Минимальная сумма: 0.01</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label>Тип ордера</label>
+      <select formControlName="orderType">
+        <option value="market">Market</option>
+        <option value="limit">Limit</option>
+      </select>
+    </div>
+
+    <button type="submit">Купить</button>
+  </form>
+</div>

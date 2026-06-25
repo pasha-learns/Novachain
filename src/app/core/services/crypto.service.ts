@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { environment } from '../../../environment/environment';
+import { BINANCE_API_URL } from '../tokens/api.tokens';
 
 @Injectable({ providedIn: 'root' })
 export class CryptoService {
   private readonly http = inject(HttpClient);
+  private readonly apiUrl = inject(BINANCE_API_URL);
 
   getChartData(symbol: string, days: number): Observable<[number, number][]> {
     let interval = '1h';
@@ -19,7 +20,7 @@ export class CryptoService {
       limit = 672;
     }
 
-    return this.http.get<any[][]>(`${environment.binanceApiUrl}/klines`, {
+    return this.http.get<any[][]>(`${this.apiUrl}/klines`, {
       params: { symbol, interval, limit: limit.toString() }
     }).pipe(
       map(klines => klines.map(k => [k[0], Number(k[4])]))

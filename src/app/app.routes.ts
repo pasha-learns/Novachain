@@ -30,6 +30,12 @@ export const routes: Routes = [
       import('./pages/markets/markets.component').then((m) => m.MarketsComponent),
   },
   {
+    path: 'trade',
+    loadComponent: () =>
+      import('./pages/trade/trade.component').then((m) => m.TradeComponent),
+    // canActivate: [authGuard],
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
