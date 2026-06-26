@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { MarketRow } from '../../core/models/market.model';
+import { DataService } from '../../core/services/data.service';
 import { MarketsService } from '../../core/services/markets.service';
 import { SearchService } from '../../core/services/search.service';
 import { QUOTE_CURRENCY } from '../../core/tokens/quote-currency.token';
@@ -18,18 +18,17 @@ export class MarketsComponent implements OnInit, OnDestroy {
   private readonly marketsService = inject(MarketsService);
   private readonly searchService = inject(SearchService);
   private readonly router = inject(Router);
+  readonly dataService = inject(DataService);
   readonly quoteCurrency = inject(QUOTE_CURRENCY);
 
-  readonly rows = signal<MarketRow[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
-  readonly favoriteSymbols = signal<Set<string>>(new Set());
-  readonly favoriteCount = computed(() => this.favoriteSymbols().size);
 
   readonly filteredRows = computed(() => {
     const query = this.searchService.query();
-    if (!query) return this.rows();
-    return this.rows().filter(
+    const rows = this.dataService.marketRows();
+    if (!query) return rows;
+    return rows.filter(
       (row) =>
         row.symbol.toLowerCase().includes(query) ||
         String(row.price).includes(query) ||
@@ -39,6 +38,10 @@ export class MarketsComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    if (this.dataService.marketRows().length > 0) {
+      this.isLoading.set(false);
+      return;
+    }
     this.loadMarkets();
   }
 
@@ -52,7 +55,7 @@ export class MarketsComponent implements OnInit, OnDestroy {
 
     this.marketsService.getUsdtPairs().subscribe({
       next: (data) => {
-        this.rows.set(data);
+        this.dataService.setMarkets(data);
         this.isLoading.set(false);
       },
       error: () => {
@@ -63,18 +66,11 @@ export class MarketsComponent implements OnInit, OnDestroy {
   }
 
   onPairSelected(symbol: string): void {
+    this.dataService.setSymbol(symbol);
     this.router.navigate(['/trade', symbol]);
   }
 
   onFavoriteToggled(symbol: string): void {
-    this.favoriteSymbols.update((current) => {
-      const next = new Set(current);
-      if (next.has(symbol)) {
-        next.delete(symbol);
-      } else {
-        next.add(symbol);
-      }
-      return next;
-    });
+    this.dataService.toggleFavorite(symbol);
   }
 }

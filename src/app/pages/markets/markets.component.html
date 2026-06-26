@@ -15,7 +15,7 @@
   } @else {
     <app-markets-table
       [rows]="filteredRows()"
-      [favoriteSymbols]="favoriteSymbols()"
+      [favoriteSymbols]="dataService.favoriteSymbols()"
       (pairSelected)="onPairSelected($event)"
       (favoriteToggled)="onFavoriteToggled($event)"
     />
