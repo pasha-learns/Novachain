@@ -3,6 +3,35 @@
     <a routerLink="/markets" class="back-link">← Back to Markets</a>
     <h1>Trade</h1>
     <p class="symbol">{{ symbol() | pairSymbol }}</p>
-    <p class="subtitle">Trading view for {{ symbol() }} — Sprint 2 placeholder</p>
   </header>
+
+  <form [formGroup]="tradeForm" (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label for="trade-pair">Pair</label>
+      <select id="trade-pair" formControlName="pair">
+        <option value="BTCUSDT">BTC/USDT</option>
+        <option value="ETHUSDT">ETH/USDT</option>
+        <option value="SOLUSDT">SOL/USDT</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="trade-amount">Amount</label>
+      <input id="trade-amount" type="number" formControlName="amount" step="0.01">
+
+      @if (tradeForm.get('amount')?.touched && tradeForm.get('amount')?.hasError('min')) {
+        <span class="error">Minimum amount: 0.01</span>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="trade-order-type">Order type</label>
+      <select id="trade-order-type" formControlName="orderType">
+        <option value="market">Market</option>
+        <option value="limit">Limit</option>
+      </select>
+    </div>
+
+    <button type="submit">Submit order</button>
+  </form>
 </div>
