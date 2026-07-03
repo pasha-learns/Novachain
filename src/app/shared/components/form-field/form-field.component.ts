@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, viewChild } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -21,7 +21,7 @@ export class FormFieldComponent implements ControlValueAccessor {
   private static nextId = 0;
   private readonly ngControl = inject(NgControl, { optional: true, self: true });
 
-  @ViewChild('fieldInput') private fieldInputRef!: ElementRef<HTMLInputElement>;
+  private readonly fieldInputRef = viewChild.required<ElementRef<HTMLInputElement>>('fieldInput');
 
   readonly label = input<string>('');
   readonly type = input<string>('text');
@@ -31,8 +31,7 @@ export class FormFieldComponent implements ControlValueAccessor {
   readonly groupErrors = input<ValidationErrors | null>(null);
 
   protected readonly inputId = `field-${++FormFieldComponent.nextId}`;
-  // Internal FormControl owns the input's value and disabled state.
-  // Its valueChanges stream propagates updates to the parent form.
+
   protected readonly innerControl = new FormControl('');
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -51,7 +50,7 @@ export class FormFieldComponent implements ControlValueAccessor {
   }
 
   focus(): void {
-    this.fieldInputRef.nativeElement.focus();
+    this.fieldInputRef().nativeElement.focus();
   }
 
   protected get isTouched(): boolean {
