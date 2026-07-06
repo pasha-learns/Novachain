@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -27,7 +27,7 @@ export class HeaderComponent {
   private readonly authService = inject(AuthService);
   private readonly searchService = inject(SearchService);
 
-  @ViewChild(FormFieldComponent) private searchFieldRef?: FormFieldComponent;
+  private readonly searchFieldRef = viewChild(FormFieldComponent);
 
   readonly isAuthenticated = this.authService.isAuthenticated;
   readonly isSearchOpen = signal(false);
@@ -54,7 +54,7 @@ export class HeaderComponent {
     this.isSearchOpen.set(opening);
 
     if (opening) {
-      this.searchFieldRef?.focus();
+      this.searchFieldRef()?.focus();
     } else {
       this.searchControl.setValue('', { emitEvent: false });
       this.searchService.clear();

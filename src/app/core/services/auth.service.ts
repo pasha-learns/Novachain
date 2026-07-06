@@ -23,8 +23,6 @@ export class AuthService {
   });
 
   constructor() {
-    // Detects an expired token on startup or whenever _token changes.
-    // untracked prevents writing _token from scheduling another run of this effect.
     effect(() => {
       const token = this._token();
       if (token !== null && !this.isTokenValid(token)) {
